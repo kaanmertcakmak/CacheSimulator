@@ -1,0 +1,7 @@
+num_ways	2
+line_size	4
+replacement_policy	LRU
+write_policy	write_back
+num_sets	4
+num_warmup	1000
+num_access	2000

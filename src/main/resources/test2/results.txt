@@ -1,0 +1,17 @@
+Warmup Stats
+------------
+Num Accesses: 1000
+Num Hits: 222
+Num Misses: 778
+Cache hit rate: 22.2%
+Num writes to the main memory: 262
+
+
+
+Real Stats
+------------
+Num Accesses: 2000
+Num Hits: 1015
+Num Misses: 985
+Cache hit rate: 50.74999999999999%
+Num writes to the main memory: 579
