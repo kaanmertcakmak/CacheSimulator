@@ -1,18 +1,16 @@
 package simulator.util;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 import simulator.model.Statistics;
 
-import static java.lang.System.getProperty;
 import static java.lang.System.out;
 
 /**
@@ -30,17 +28,18 @@ public class FileHandler {
      * @param filePath Desired file's path
      * @return BufferedReader as file
      */
-    public static BufferedReader readResourceFile(String filePath) throws FileNotFoundException {
-        File file=new File(getProperty("user.dir") + "/src/main/resources/" + filePath);
-        FileReader fr = new FileReader(file); //creates a new file instance
-        return new BufferedReader(fr);  //creates a buffering character input stream
+    public static BufferedReader readResourceFile(String filePath) {
+        InputStream is = FileHandler.class.getClassLoader().getResourceAsStream(filePath);
+
+        return new BufferedReader(new InputStreamReader(is));  //creates a buffering character input stream
     }
 
     /**
      * Reads trace file from src/main/resources folder
      * @return BufferedReader
      */
-    public static BufferedReader readTraceFile() throws FileNotFoundException {
+    public static BufferedReader readTraceFile() {
+        //This should be "aligned.trace" but size became too long so I created new short file with first 5000 lines of aligned.trace
         return readResourceFile("alignedshort.trace");
     }
 
@@ -74,13 +73,8 @@ public class FileHandler {
     }
 
     public static void writeResultsToFile(String header, Statistics statistics) throws IOException {
-        String warmUpResultsPath = getProperty("user.dir") + "/src/main/resources/result/" + header + "-results.txt";
-        File file=new File(warmUpResultsPath);
-        if(!file.exists()) {
-            file.createNewFile();
-        }
-        try (FileWriter fileWriter = new FileWriter(warmUpResultsPath)) {
-            String results = generateResultString("Warmup", statistics);
+        try (FileWriter fileWriter = new FileWriter(header + "-results.txt")) {
+            String results = generateResultString(header, statistics);
             fileWriter.write(results);
         }
     }
