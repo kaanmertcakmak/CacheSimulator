@@ -17,7 +17,14 @@ import static java.lang.System.out;
 public class Simulator {
 
     public static void main(String[] args) throws IOException {
-        runSimulatorAndGenerateResults("test1");
+        String folderName = "test1";
+        if(args.length > 0) {
+            folderName = args[0];
+            out.println("Simulator will run with the params.txt under " + folderName + " folder");
+        } else {
+            out.println("No folder is selected so the params under default folder " + folderName + " will be used");
+        }
+        runSimulatorAndGenerateResults(folderName);
     }
 
     private static void runSimulatorAndGenerateResults(String inputFolderName) throws IOException {
