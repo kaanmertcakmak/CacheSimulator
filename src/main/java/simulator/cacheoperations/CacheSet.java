@@ -27,8 +27,8 @@ public class CacheSet {
         lineMap = new HashMap<>(numWays);
     }
 
-    public Line insertNewLineToTheCache(long tag, String hexAddress, int recency, Command command, WriteAlgorithm writeAlgorithm) {
-        Line line = new Line(tag, hexAddress);
+    public Line insertNewLineToTheCache(long tag, int recency, Command command, WriteAlgorithm writeAlgorithm) {
+        Line line = new Line(tag);
         line.setRecency(recency);
         Statistics.INSTANCE.incrementMisses();
         if(command.getName().equals(Command.STORE.getName()) && writeAlgorithm.isEqualTo(WriteAlgorithm.WRITE_THROUGH)) {
@@ -37,7 +37,7 @@ public class CacheSet {
         return line;
     }
 
-    public Line replaceLineWithRemovedOne(long tag, String hexAddress, ReplacementPolicy replacementPolicy,
+    public Line replaceLineWithRemovedOne(long tag, ReplacementPolicy replacementPolicy,
                                           Command command, WriteAlgorithm writeAlgorithm, int recency) {
         Line line = removeLineBlock(lineMap, replacementPolicy);
         Statistics.INSTANCE.incrementMisses();
@@ -48,28 +48,27 @@ public class CacheSet {
             Statistics.INSTANCE.incrementWriteCountToTheMainMemory();
         }
 
-        line.writeInLine(tag, hexAddress, recency);
+        line.writeInLine(tag, recency);
         return line;
     }
 
     /**
      * Cache operation method
      * @param tag Tag that will be stored or gathered to the cache
-     * @param hexAddress Hex address as an input
      * @param replacementPolicy Parameter to define we will replace values with LRU or LFU
      * @param command Memory command. Can be either LOAD or STORE
      * @param writeAlgorithm Write algorithm can be either write_back or write_through
      */
-    public void insertInSet(long tag, String hexAddress, ReplacementPolicy replacementPolicy, Command command, WriteAlgorithm writeAlgorithm) {
+    public void insertInSet(long tag, ReplacementPolicy replacementPolicy, Command command, WriteAlgorithm writeAlgorithm) {
         int recency = CacheParameters.INSTANCE.getRecency() + 1;
         Line line = lineMap.get(tag);
         if(lineMap.size() != numWays && Objects.isNull(line)) {
             // When we have lines less than ways count, and the line that we look for is not in set...
-            line = insertNewLineToTheCache(tag, hexAddress, recency, command, writeAlgorithm);
+            line = insertNewLineToTheCache(tag, recency, command, writeAlgorithm);
             lineMap.put(tag, line);
         } else if (Objects.isNull(line)){
             // line block with key as "tag" equals null, that means we don't have any line with that tag, so we replace it
-            line = replaceLineWithRemovedOne(tag, hexAddress, replacementPolicy, command, writeAlgorithm, recency);
+            line = replaceLineWithRemovedOne(tag, replacementPolicy, command, writeAlgorithm, recency);
             lineMap.put(tag, line);
         } else {
             // Enters this else part when we found what we look for in cache, so it is a hit
@@ -79,7 +78,6 @@ public class CacheSet {
 
             if(command.getName().equals(Command.STORE.getName())) {
                 if(writeAlgorithm.isEqualTo(WriteAlgorithm.WRITE_THROUGH)) {
-                    line.setHexAddress(hexAddress);
                     Statistics.INSTANCE.incrementWriteCountToTheMainMemory();
                     line.setDirty(false);
                 } else {
@@ -92,6 +90,7 @@ public class CacheSet {
 
     /**
      * Removes line block due to replacement policy for replacing it later
+     * We are getting the line with a tag that has least frequency (or recency) and remove it
      * @param lineMap Line that will be removed
      * @param replacementPolicy Parameter to define we will remove values with LRU or LFU
      *                          if LRU, we will get the line with minimum recency value and remove it from map.
@@ -102,7 +101,6 @@ public class CacheSet {
         List<Map.Entry<Long, Line>> lineEntries = new ArrayList<>(lineMap.entrySet());
         long keyOfTheLineToBeReplaced = 0;
         int min = Integer.MAX_VALUE;
-        // Get least use count
 
         for(Map.Entry<Long, Line> line : lineEntries) {
             int compareParam;
@@ -113,8 +111,8 @@ public class CacheSet {
             }
             min = Math.min(min, compareParam);
         }
-        // get line block with least use count
-        // Get least use count
+
+        // get line block with least use count or least recency depending of replacement policy
         for(Map.Entry<Long, Line> line : lineEntries) {
             if(replacementPolicy.getName().equals(ReplacementPolicy.LFU.getName())) {
                 if(min == line.getValue().getFrequency()) {
@@ -125,7 +123,6 @@ public class CacheSet {
                     keyOfTheLineToBeReplaced = line.getKey();
                 }
             }
-
         }
 
         return lineMap.remove(keyOfTheLineToBeReplaced);

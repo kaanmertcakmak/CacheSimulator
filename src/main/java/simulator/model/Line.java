@@ -11,13 +11,11 @@ public class Line {
     // TODO: Tag in here is useless since we already use it as map key in CacheSet class. Added this just for better printing
     private long tag;
     private int frequency;
-    private String hexAddress;
     private int recency;
 
-    public Line(long tag, String hexAddress) {
+    public Line(long tag) {
         setTag(tag);
         setValid(true);
-        setHexAddress(hexAddress);
         frequency = 1;
     }
 
@@ -27,14 +25,6 @@ public class Line {
 
     public int getRecency() {
         return recency;
-    }
-
-    public String getHexAddress() {
-        return hexAddress;
-    }
-
-    public void setHexAddress(String hexAddress) {
-        this.hexAddress = hexAddress;
     }
 
     public int getFrequency() {
@@ -73,10 +63,9 @@ public class Line {
         this.tag = tag;
     }
 
-    public void writeInLine(long tag, String hexAddress, int recency) {
+    public void writeInLine(long tag, int recency) {
         setTag(tag);
         setValid(true);
-        setHexAddress(hexAddress);
         setRecency(recency);
         setFrequency(1);
         setDirty(false);
@@ -88,7 +77,6 @@ public class Line {
                 "isValid=" + isValid +
                 ", isDirty=" + isDirty +
                 ", tag=" + tag +
-                ", hexAddress(data)=" + hexAddress +
                 ", frequency=" + frequency +
                 ", recency=" + recency +
                 '}';

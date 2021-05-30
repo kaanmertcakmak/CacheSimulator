@@ -52,7 +52,7 @@ public class Cache {
             return set;
         });
 
-        cacheSet.insertInSet(tag, hexAddress, this.replacementPolicy, command, writeAlgorithm);
+        cacheSet.insertInSet(tag, this.replacementPolicy, command, writeAlgorithm);
     }
 
     public void printCache() {
