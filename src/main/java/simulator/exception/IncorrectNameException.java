@@ -1,12 +1,3 @@
-//
-//                               ASSIA, Inc.
-//                     Confidential and Proprietary
-//                         ALL RIGHTS RESERVED.
-//
-//      This software is provided under license and may be used
-//      or distributed only in accordance with the terms of
-//      such license.
-//
 package simulator.exception;
 
 /**

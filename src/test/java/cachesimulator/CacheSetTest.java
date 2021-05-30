@@ -1,29 +1,13 @@
-//
-//                               ASSIA, Inc.
-//                     Confidential and Proprietary
-//                         ALL RIGHTS RESERVED.
-//
-//      This software is provided under license and may be used
-//      or distributed only in accordance with the terms of
-//      such license.
-//
 package cachesimulator;
 
-import java.io.IOException;
-import java.util.Map;
-
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
-import simulator.cacheoperations.Cache;
 import simulator.cacheoperations.CacheSet;
 import simulator.model.Command;
 import simulator.model.Line;
-import simulator.model.ReplacementPolicy;
 import simulator.model.Statistics;
 import simulator.model.WriteAlgorithm;
-import simulator.util.FileHandler;
 
 /**
  * @since 5/30/2021

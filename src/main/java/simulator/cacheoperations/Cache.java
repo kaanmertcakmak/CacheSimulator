@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
+import simulator.exception.IncorrectInputException;
 import simulator.model.CacheParameters;
 import simulator.model.Command;
 import simulator.model.ReplacementPolicy;
@@ -55,6 +56,10 @@ public class Cache {
         cacheSet.insertInSet(tag, this.replacementPolicy, command, writeAlgorithm);
     }
 
+    public Map<Integer, CacheSet> getCacheSets() {
+        return cacheSets;
+    }
+
     public void printCache() {
         out.println("******************** Cache Start **************************");
         for(Map.Entry<Integer, CacheSet> cacheSet : cacheSets.entrySet()) {
@@ -86,6 +91,9 @@ public class Cache {
      * @return tag Return's tag bit of cache index
      */
     public long generateTag(String hexAddress) {
+        if(hexAddress == null || hexAddress.isEmpty()) {
+            throw new IncorrectInputException("Hex address " + hexAddress + " is incorrect. Please provide 16 bit hex address");
+        }
 //        out.println("************************ Generating Tag ******************************");
 //        out.println("Hex Address = " + hexAddress);
         String binary = new BigInteger(hexAddress, 16).toString(2);;
