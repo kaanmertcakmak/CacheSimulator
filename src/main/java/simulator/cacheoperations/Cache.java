@@ -85,7 +85,7 @@ public class Cache {
      * @param hexAddress Hex address as an input
      * @return tag Return's tag bit of cache index
      */
-    private long generateTag(String hexAddress) {
+    public long generateTag(String hexAddress) {
 //        out.println("************************ Generating Tag ******************************");
 //        out.println("Hex Address = " + hexAddress);
         String binary = new BigInteger(hexAddress, 16).toString(2);;
