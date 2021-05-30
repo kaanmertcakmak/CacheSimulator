@@ -46,11 +46,11 @@ public class Cache {
     public void insertInCache(String hexAddress, int numWays, Command command) {
         long tag = generateTag(hexAddress);
         int setIndex = CacheParameters.INSTANCE.getSetIndex();
-        CacheSet cacheSet = cacheSets.computeIfAbsent(setIndex, c -> {
-            CacheSet set = new CacheSet(numWays);
-            cacheSets.put(setIndex, set);
-            return set;
-        });
+        CacheSet cacheSet = cacheSets.get(setIndex);
+        if(cacheSet == null) {
+            cacheSet = new CacheSet(numWays);
+            cacheSets.put(setIndex, cacheSet);
+        }
 
         cacheSet.insertInSet(tag, this.replacementPolicy, command, writeAlgorithm);
     }
