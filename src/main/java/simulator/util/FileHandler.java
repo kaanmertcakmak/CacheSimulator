@@ -41,7 +41,7 @@ public class FileHandler {
      * @return BufferedReader
      */
     public static BufferedReader readTraceFile() throws FileNotFoundException {
-        return readResourceFile("aligned.trace");
+        return readResourceFile("alignedshort.trace");
     }
 
     /**
